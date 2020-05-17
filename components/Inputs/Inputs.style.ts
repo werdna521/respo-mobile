@@ -12,21 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screens/Home/Home';
+import { StyleSheet } from 'react-native';
+import { fontMixin, paddingMixin } from '../../utils/mixins';
+import { borderRadius, colors, dimens, fonts } from '../../utils/variables';
 
-const Stack = createStackNavigator();
-
-const RootNavigator: React.FC = () => {
-  return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen
-        name="Home"
-        component={Home}
-      />
-    </Stack.Navigator>
-  );
-};
-
-export default RootNavigator;
+export const input = StyleSheet.create({
+  main: {
+    ...fontMixin(colors.PRIMARY_DARK, dimens.byFour(4.5), fonts.REGULAR),
+    ...paddingMixin(dimens.XS, dimens.M),
+    borderRadius: borderRadius.ROUNDED,
+    backgroundColor: colors.LIGHT,
+    elevation: 1
+  }
+});

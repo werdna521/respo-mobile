@@ -24,7 +24,8 @@ const App: React.FC = () => {
   useEffect(() => {
     const bootstrapAsync = async () => {
       await Font.loadAsync({
-        'montserrat-bold': require('./assets/fonts/montserrat/Montserrat-Bold.ttf')
+        'montserrat-bold': require('./assets/fonts/montserrat/Montserrat-Bold.ttf'),
+        'montserrat-regular': require('./assets/fonts/montserrat/Montserrat-Regular.ttf')
       });
       _setLoading(false);
     };

@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screens/Home/Home';
-
-const Stack = createStackNavigator();
-
-const RootNavigator: React.FC = () => {
-  return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen
-        name="Home"
-        component={Home}
-      />
-    </Stack.Navigator>
-  );
+export const filterMixinProps = (mixinProps: any) => {
+  const filteredProps: any = {};
+  for (const key in mixinProps)
+    if (mixinProps.hasOwnProperty(key))
+      mixinProps[key] !== undefined ? filteredProps[key] = mixinProps[key] : null;
+  return filteredProps;
 };
 
-export default RootNavigator;
+export const getRecipeCategory = (type: number): string => {
+  switch (type) {
+    case 1: return 'Potatoes';
+    case 2: return 'Chicken';
+    default: return 'Unknown';
+  }
+}

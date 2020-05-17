@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screens/Home/Home';
+import { StyleSheet } from 'react-native';
+import { fontMixin } from '../../utils/mixins';
+import { fonts } from '../../utils/variables';
 
-const Stack = createStackNavigator();
+export const regularText = (color: string, size: number) => StyleSheet.create({
+  main: {
+    ...fontMixin(color, size, fonts.REGULAR)
+  }
+});
 
-const RootNavigator: React.FC = () => {
-  return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen
-        name="Home"
-        component={Home}
-      />
-    </Stack.Navigator>
-  );
-};
-
-export default RootNavigator;
+export const boldText = (color: string, size: number) => StyleSheet.create({
+  main: {
+    ...fontMixin(color, size, fonts.BOLD)
+  }
+});

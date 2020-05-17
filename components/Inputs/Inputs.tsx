@@ -13,20 +13,22 @@
 // limitations under the License.
 
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screens/Home/Home';
+import { StyleProp, TextInput } from 'react-native';
+import { colors } from '../../utils/variables';
+import * as stylesheet from './Inputs.style';
 
-const Stack = createStackNavigator();
-
-const RootNavigator: React.FC = () => {
-  return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen
-        name="Home"
-        component={Home}
-      />
-    </Stack.Navigator>
-  );
+type InputProps = {
+  style?: StyleProp<any>
 };
 
-export default RootNavigator;
+export const Input: React.FC<InputProps> = ({ style }) => {
+  const styles = stylesheet.input;
+
+  return (
+    <TextInput
+      style={[style, styles.main]}
+      placeholder="Search for something"
+      placeholderTextColor={colors.PRIMARY_ACCENT}
+    />
+  );
+};

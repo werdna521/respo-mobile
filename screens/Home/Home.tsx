@@ -13,12 +13,84 @@
 // limitations under the License.
 
 import React  from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { SearchBar } from '../../components/Bars/Bars';
+import { RecipeCard } from '../../components/Cards/Cards';
+import { dimens } from '../../utils/variables';
+
+const dummy = [
+  {
+    id: 1,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 2,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 3,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 4,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 5,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 6,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 7,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 8,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 9,
+    name: 'Kentang Goreng',
+    type: 1
+  },
+  {
+    id: 10,
+    name: 'Kentang Goreng',
+    type: 1
+  }
+];
 
 const Home: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Text style={{ fontFamily: 'montserrat-bold', fontSize: 32 }}>Respo</Text>
+      <SearchBar />
+      <FlatList
+        style={styles.flatList}
+        showsVerticalScrollIndicator={false}
+        data={dummy}
+        renderItem={({ item, index }) => {
+          const { name, type } = item;
+          return (
+            <RecipeCard
+              style={[styles.cardItem, index === dummy.length-1 ? styles.lastCardItem : null]}
+              title={name}
+              type={type}
+            />
+          );
+        }}
+        keyExtractor={({ id, name }) => `#${id}${name}`}
+      />
     </View>
   );
 };
@@ -27,8 +99,16 @@ export default Home;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center'
+    flex: 1
+  },
+  flatList: {
+    marginHorizontal: dimens.M,
+    paddingVertical: dimens.M
+  },
+  cardItem: {
+    marginVertical: dimens.XS
+  },
+  lastCardItem: {
+    marginBottom: dimens.XXL
   }
 });
