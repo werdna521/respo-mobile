@@ -16,5 +16,11 @@ import { filterResponse, generateURL, get } from '../utils';
 
 export const getAll = async () => {
   const response = await get(generateURL('/recipes.php'));
-  return filterResponse(response);
+  return await filterResponse(response);
+};
+
+export const getDetails = async (id: number, type: number) => {
+  const response = await get(generateURL('/recipe.php'), { recipe_id: id });
+  const filteredResponse = await filterResponse(response);
+  return filteredResponse ? { ...filteredResponse, type } : filteredResponse;
 };

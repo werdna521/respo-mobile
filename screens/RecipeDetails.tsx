@@ -12,28 +12,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import { flexMixin, sizingMixin } from '../utils/mixins';
-import { flexes } from '../utils/variables';
+import { sizingMixin } from '../utils/mixins';
 import { getScreenWidth } from '../utils/dimens';
 import { useRoute, RouteProp } from '@react-navigation/native';
+import { RecipeTray } from '../components/RecipeTray/RecipeTray';
+import * as RecipeRepository from '../api/recipe/recipe';
+import { LoadingIndicator } from '../components/Loadings/Loadings';
+import { getRecipeCategory } from '../utils/helpers';
 
 type RootStackProps = {
   Home: {},
   RecipeDetails: {
-    id: number
+    id: number,
+    type: number
   }
 };
+
 type RouteProps = RouteProp<RootStackProps, 'RecipeDetails'>
 
+type RecipeDetails = {
+  name: string,
+  type: number,
+  ingredients: string,
+  procedures: string
+};
+
 const RecipeDetails = () => {
+  const [_loading, _setLoading] = useState(true);
+  const [_name, _setName] = useState('');
+  const [_type, _setType] = useState(-1);
+  const [_ingredients, _setIngredients] = useState('');
+  const [_procedures, _setProcedures] = useState('');
 
   const route = useRoute<RouteProps>();
 
   useEffect(() => {
-    const { id } = route.params;
-    alert(id);
+    const fetchAsync = async (id: number, type: number) => {
+      const recipeDetails: RecipeDetails = await RecipeRepository.getDetails(id, type);
+      _setName(recipeDetails.name);
+      _setType(recipeDetails.type);
+      _setIngredients(recipeDetails.ingredients);
+      _setProcedures(recipeDetails.procedures);
+      _setLoading(false);
+    };
+    const { id, type } = route.params;
+    fetchAsync(id, type).then();
   }, []);
 
   return (
@@ -42,6 +67,13 @@ const RecipeDetails = () => {
         style={styles.topBgImage}
         source={require('../assets/img/bg.png')}
       />
+      <RecipeTray
+        name={_name}
+        category={getRecipeCategory(_type)}
+        ingredients={_ingredients}
+        procedures={_procedures}
+      />
+      <LoadingIndicator show={_loading} />
     </View>
   );
 };
@@ -53,6 +85,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   topBgImage: {
-    ...sizingMixin('100%', 0.64 * getScreenWidth())
+    ...sizingMixin('100%', 0.64 * getScreenWidth()),
+    position: 'absolute',
+    top: 0
   }
 });
