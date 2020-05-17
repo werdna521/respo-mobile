@@ -13,7 +13,17 @@
 // limitations under the License.
 
 import React, { ReactNode } from 'react';
-import { FlexStyle, Image, ImageStyle, StyleProp, TextStyle, TransformsStyle, View, ViewStyle } from 'react-native';
+import {
+  FlexStyle,
+  GestureResponderEvent,
+  Image,
+  ImageStyle,
+  StyleProp,
+  TextStyle, TouchableOpacity,
+  TransformsStyle,
+  View,
+  ViewStyle
+} from 'react-native';
 import { colors, dimens } from '../../utils/variables';
 import * as stylesheet from './Cards.style';
 import { BoldText, RegularText } from '../Texts/Texts';
@@ -22,39 +32,49 @@ import { getRecipeCategory } from '../../utils/helpers';
 type CardProps = {
   children: ReactNode,
   color?: string,
-  style?: StyleProp<any>
+  style?: StyleProp<any>,
+  onPress?: () => void
 };
 
 export const Card: React.FC<CardProps> = ({
   children,
   color = colors.LIGHT,
-  style = {}
+  style = {},
+  onPress
 }) => {
   const styles = stylesheet.card(color);
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => onPress ? onPress() : null}
+      activeOpacity={onPress ? 0.9 : 1}
       style={[styles.main, style]}
-      children={children}
-    />
+    >
+      <View children={children} />
+    </TouchableOpacity>
   );
 };
 
 type RecipeCardProps = {
   title: string,
   type: number,
-  style?: StyleProp<any>
+  style?: StyleProp<any>,
+  onPress?: () => void
 };
 
 export const RecipeCard: React.FC<RecipeCardProps> = ({
   title,
   type,
-  style = {}
+  style = {},
+  onPress
 }) => {
   const styles = stylesheet.recipeCard;
 
   return (
-    <Card style={style}>
+    <Card
+      style={style}
+      onPress={onPress}
+    >
       <View style={styles.container}>
         <Image
           style={styles.thumbnail}

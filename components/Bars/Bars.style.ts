@@ -24,7 +24,8 @@ export const searchBar = StyleSheet.create({
     borderBottomLeftRadius: borderRadius.ROUNDED,
     borderBottomRightRadius: borderRadius.ROUNDED,
     backgroundColor: colors.PRIMARY_LIGHT,
-    elevation: 8
+    elevation: 8,
+    zIndex: 1
   },
   topContainer: {
     ...flexMixin(flexes.direction.ROW, flexes.justify.START, flexes.align.CENTER)

@@ -12,78 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React  from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { SearchBar } from '../../components/Bars/Bars';
 import { RecipeCard } from '../../components/Cards/Cards';
 import { dimens } from '../../utils/variables';
+import { LoadingIndicator } from '../../components/Loadings/Loadings';
+import * as RecipeRepository from '../../api/recipe/recipe';
 
-const dummy = [
-  {
-    id: 1,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 2,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 3,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 4,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 5,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 6,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 7,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 8,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 9,
-    name: 'Kentang Goreng',
-    type: 1
-  },
-  {
-    id: 10,
-    name: 'Kentang Goreng',
-    type: 1
-  }
-];
+interface Recipe {
+  id: number,
+  name: string,
+  type: number
+}
+
+type Recipes = Array<Recipe>
 
 const Home: React.FC = () => {
+  const [_loading, _setLoading] = useState(true);
+  const [_recipes, _setRecipes] = useState<Recipes | []>([]);
+
+  useEffect(() => {
+    const fetchAsync = async () => {
+      const recipes: Recipes = await RecipeRepository.getAll();
+      _setRecipes(recipes);
+      _setLoading(false);
+    };
+    fetchAsync().then();
+  }, []);
+
   return (
     <View style={styles.container}>
       <SearchBar />
       <FlatList
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
-        data={dummy}
+        data={_recipes}
         renderItem={({ item, index }) => {
           const { name, type } = item;
           return (
             <RecipeCard
-              style={[styles.cardItem, index === dummy.length-1 ? styles.lastCardItem : null]}
+              style={[styles.cardItem, index === _recipes.length-1 ? styles.lastCardItem : null]}
+              onPress={() => alert(name)}
               title={name}
               type={type}
             />
@@ -91,6 +61,7 @@ const Home: React.FC = () => {
         }}
         keyExtractor={({ id, name }) => `#${id}${name}`}
       />
+      <LoadingIndicator show={_loading} />
     </View>
   );
 };

@@ -15,3 +15,4 @@ web-report/
 
 # intelliJ IDEA
 .idea/*
+yarn.lock
