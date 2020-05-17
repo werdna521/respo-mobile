@@ -34,6 +34,7 @@ type RouteProps = RouteProp<RootStackProps, 'RecipeDetails'>
 
 type RecipeDetails = {
   name: string,
+  category: string,
   type: number,
   ingredients: string,
   procedures: string
@@ -42,7 +43,7 @@ type RecipeDetails = {
 const RecipeDetails = () => {
   const [_loading, _setLoading] = useState(true);
   const [_name, _setName] = useState('');
-  const [_type, _setType] = useState(-1);
+  const [_category, _setCategory] = useState('');
   const [_ingredients, _setIngredients] = useState('');
   const [_procedures, _setProcedures] = useState('');
 
@@ -52,7 +53,7 @@ const RecipeDetails = () => {
     const fetchAsync = async (id: number, type: number) => {
       const recipeDetails: RecipeDetails = await RecipeRepository.getDetails(id, type);
       _setName(recipeDetails.name);
-      _setType(recipeDetails.type);
+      _setCategory(recipeDetails.category);
       _setIngredients(recipeDetails.ingredients);
       _setProcedures(recipeDetails.procedures);
       _setLoading(false);
@@ -69,7 +70,7 @@ const RecipeDetails = () => {
       />
       <RecipeTray
         name={_name}
-        category={getRecipeCategory(_type)}
+        category={_category}
         ingredients={_ingredients}
         procedures={_procedures}
       />

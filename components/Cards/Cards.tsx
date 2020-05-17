@@ -27,7 +27,7 @@ import {
 import { colors, dimens } from '../../utils/variables';
 import * as stylesheet from './Cards.style';
 import { BoldText, RegularText } from '../Texts/Texts';
-import { getRecipeCategory } from '../../utils/helpers';
+import { getRecipeCategory, getRecipeThumbnail } from '../../utils/helpers';
 
 type CardProps = {
   children: ReactNode,
@@ -57,6 +57,7 @@ export const Card: React.FC<CardProps> = ({
 
 type RecipeCardProps = {
   title: string,
+  category: string,
   type: number,
   style?: StyleProp<any>,
   onPress?: () => void
@@ -65,6 +66,7 @@ type RecipeCardProps = {
 export const RecipeCard: React.FC<RecipeCardProps> = ({
   title,
   type,
+  category,
   style = {},
   onPress
 }) => {
@@ -78,7 +80,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
       <View style={styles.container}>
         <Image
           style={styles.thumbnail}
-          source={require('../../assets/img/fries.png')}
+          source={getRecipeThumbnail(type)}
         />
         <View style={styles.textContainer}>
           <BoldText
@@ -87,11 +89,11 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           />
           <RegularText
             size={dimens.byFour(3.5)}
-            text={getRecipeCategory(type)}
+            text={category}
           />
           <RegularText
             style={styles.authorText}
-            size={dimens.byFour(3.5)}
+            size={dimens.S}
             text="by Admin"
           />
         </View>

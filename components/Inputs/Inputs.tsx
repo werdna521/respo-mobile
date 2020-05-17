@@ -18,14 +18,16 @@ import { colors } from '../../utils/variables';
 import * as stylesheet from './Inputs.style';
 
 type InputProps = {
-  style?: StyleProp<any>
+  style?: StyleProp<any>,
+  onChange?: (text: string) => void
 };
 
-export const Input: React.FC<InputProps> = ({ style }) => {
+export const Input: React.FC<InputProps> = ({ style, onChange }) => {
   const styles = stylesheet.input;
 
   return (
     <TextInput
+      onChangeText={onChange}
       style={[style, styles.main]}
       placeholder="Search for something"
       placeholderTextColor={colors.PRIMARY_ACCENT}

@@ -13,14 +13,28 @@
 // limitations under the License.
 
 import { filterResponse, generateURL, get } from '../utils';
+import { getRecipeCategory } from '../../utils/helpers';
 
 export const getAll = async () => {
   const response = await get(generateURL('/recipes.php'));
-  return await filterResponse(response);
+  const filteredResponse: [{ id: number, name: string, type: number }] = await filterResponse(response);
+  if (!filteredResponse) return null;
+  return filteredResponse.map(({ name, type, id }) => ({
+    id,
+    name: name,
+    type: type,
+    category: getRecipeCategory(type)
+  }))
 };
 
 export const getDetails = async (id: number, type: number) => {
   const response = await get(generateURL('/recipe.php'), { recipe_id: id });
   const filteredResponse = await filterResponse(response);
-  return filteredResponse ? { ...filteredResponse, type } : filteredResponse;
+  return filteredResponse ? {
+    name: filteredResponse.name,
+    type,
+    category: getRecipeCategory(type),
+    ingredients: filteredResponse.ingredients,
+    procedures: filteredResponse.procedures
+  } : filteredResponse;
 };

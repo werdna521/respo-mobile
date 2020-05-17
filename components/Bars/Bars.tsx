@@ -12,19 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import React from 'react';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
 import * as stylesheet from './Bars.style';
 import { BoldText } from '../Texts/Texts';
 import { Input } from '../Inputs/Inputs';
 import { dimens } from '../../utils/variables';
+import { Recipe } from '../../screens/Home';
+import Fuse from 'fuse.js';
 
 type SearchBarProps = {
-
+  data: Array<Recipe> | null,
+  setData: React.Dispatch<React.SetStateAction<Array<Recipe> | [] | null>>
 };
 
-export const SearchBar: React.FC<SearchBarProps> = () => {
+type FuseSearchResult = {
+  item: Recipe,
+  refIndex: number
+};
+
+export const SearchBar: React.FC<SearchBarProps> = ({
+  data,
+  setData
+}) => {
+  const [_query, _setQuery] = useState('');
+
   const styles = stylesheet.searchBar;
+
+  useEffect(() => {
+    if (_query === '' || data === null) return setData(data);
+    const fuse = new Fuse(data, {
+      keys: ['name', 'category']
+    });
+    const result: FuseSearchResult[] = fuse.search(_query);
+    setData(result.map(({ item }) => item));
+  }, [_query]);
 
   return (
     <View style={styles.container}>
@@ -40,7 +62,10 @@ export const SearchBar: React.FC<SearchBarProps> = () => {
           text="Respo"
         />
       </View>
-      <Input style={styles.searchInput} />
+      <Input
+        onChange={text => _setQuery(text)}
+        style={styles.searchInput}
+      />
     </View>
   );
 };

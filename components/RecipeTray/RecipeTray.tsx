@@ -71,7 +71,10 @@ export const RecipeTray: React.FC<RecipeTrayProps> = ({
         text="by Admin"
       />
       <View style={styles.line} />
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scroll}
+      >
         <TrayList
           title="Ingredients"
           content={ingredients}

@@ -20,18 +20,22 @@ import { dimens } from '../utils/variables';
 import { LoadingIndicator } from '../components/Loadings/Loadings';
 import { useNavigation } from '@react-navigation/native';
 import * as RecipeRepository from '../api/recipe/recipe';
+import { RegularText } from '../components/Texts/Texts';
 
-interface Recipe {
+export interface Recipe {
   id: number,
   name: string,
+  category: string,
   type: number
 }
 
-type Recipes = Array<Recipe>
+type Recipes = Array<Recipe> | null;
 
 const Home: React.FC = () => {
   const [_loading, _setLoading] = useState(true);
+  const [_refreshing, _setRefreshing] = useState(false);
   const [_recipes, _setRecipes] = useState<Recipes | []>([]);
+  const [_filteredRecipes, _setFilteredRecipes] = useState<Recipes | []>([]);
 
   const navigation = useNavigation();
 
@@ -44,25 +48,45 @@ const Home: React.FC = () => {
     fetchAsync().then();
   }, []);
 
+  const _onRefresh = async () => {
+    _setRefreshing(true);
+    const recipes: Recipes = await RecipeRepository.getAll();
+    _setRecipes(recipes);
+    _setRefreshing(false);
+  };
+
   return (
     <View style={styles.container}>
-      <SearchBar />
+      <SearchBar
+        data={_recipes}
+        setData={_setFilteredRecipes}
+      />
       <FlatList
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
-        data={_recipes}
+        data={_filteredRecipes}
+        onRefresh={_onRefresh}
+        refreshing={_refreshing}
         renderItem={({ item, index }) => {
-          const { id, name, type } = item;
+          const { id, name, type, category } = item;
           return (
             <RecipeCard
-              style={[styles.cardItem, index === _recipes.length-1 ? styles.lastCardItem : null]}
-              onPress={() => navigation.navigate('RecipeDetails', { id })}
+              style={[styles.cardItem, (_filteredRecipes !== null ? index === _filteredRecipes.length-1 : false)  ? styles.lastCardItem : null]}
+              onPress={() => navigation.navigate('RecipeDetails', { id, type })}
               title={name}
               type={type}
+              category={category}
             />
           );
         }}
         keyExtractor={({ id, name }) => `#${id}${name}`}
+        ListHeaderComponent={
+          <RegularText
+            style={styles.listHeader}
+            size={dimens.S}
+            text="Pull down to refresh"
+          />
+        }
       />
       <LoadingIndicator show={_loading} />
     </View>
@@ -84,5 +108,9 @@ const styles = StyleSheet.create({
   },
   lastCardItem: {
     marginBottom: dimens.XXL
+  },
+  listHeader: {
+    marginVertical: dimens.XS,
+    alignSelf: 'center'
   }
 });
