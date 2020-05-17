@@ -14,11 +14,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { SearchBar } from '../../components/Bars/Bars';
-import { RecipeCard } from '../../components/Cards/Cards';
-import { dimens } from '../../utils/variables';
-import { LoadingIndicator } from '../../components/Loadings/Loadings';
-import * as RecipeRepository from '../../api/recipe/recipe';
+import { SearchBar } from '../components/Bars/Bars';
+import { RecipeCard } from '../components/Cards/Cards';
+import { dimens } from '../utils/variables';
+import { LoadingIndicator } from '../components/Loadings/Loadings';
+import { useNavigation } from '@react-navigation/native';
+import * as RecipeRepository from '../api/recipe/recipe';
 
 interface Recipe {
   id: number,
@@ -31,6 +32,8 @@ type Recipes = Array<Recipe>
 const Home: React.FC = () => {
   const [_loading, _setLoading] = useState(true);
   const [_recipes, _setRecipes] = useState<Recipes | []>([]);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchAsync = async () => {
@@ -49,11 +52,11 @@ const Home: React.FC = () => {
         showsVerticalScrollIndicator={false}
         data={_recipes}
         renderItem={({ item, index }) => {
-          const { name, type } = item;
+          const { id, name, type } = item;
           return (
             <RecipeCard
               style={[styles.cardItem, index === _recipes.length-1 ? styles.lastCardItem : null]}
-              onPress={() => alert(name)}
+              onPress={() => navigation.navigate('RecipeDetails', { id })}
               title={name}
               type={type}
             />
