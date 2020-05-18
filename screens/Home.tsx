@@ -43,6 +43,7 @@ const Home: React.FC = () => {
     const fetchAsync = async () => {
       const recipes: Recipes = await RecipeRepository.getAll();
       _setRecipes(recipes);
+      _setFilteredRecipes(recipes);
       _setLoading(false);
     };
     fetchAsync().then();

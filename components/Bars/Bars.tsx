@@ -40,7 +40,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const styles = stylesheet.searchBar;
 
   useEffect(() => {
-    if (_query === '' || data === null) return setData(data);
+    if (_query === '') return setData(data);
+    if (data === null) return;
     const fuse = new Fuse(data, {
       keys: ['name', 'category']
     });
